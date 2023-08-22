@@ -1,4 +1,5 @@
-# UI Testing with Selenium Python Pytest - Page Object Model (POM)
+# Test Framework based on: Selenium, Python (pytest) - Page Object Model (POM)
+## This test framework is integrated with SauceLabs
 
 ## Features
 - The tests use setup/teardown methods for the session. 
@@ -10,21 +11,24 @@
 ## Prerequisites
 * Make sure pip is installed in your system (please see the instructions below).
 * Install virtual environment.
-* A json file with login credentials would need to be created. 
+* A json file with login credentials would need to be created to log into SBO. 
 
-### To activate the virtual environment:
+### To :
 ```bash
 source venv/bin/activate
 ```
-## Run the tests
-### To execute a test run this in your cmd: 
-1. cd /tests
-2. python -m venv myenv
-3. source myenv/bin/activate
-4. python -m pip install --upgrade pip
-5. pip install -r requirements.txt
-6. pytest tests -s -v or pytest --headless tests -s -v --cache-clear
-
+## Test execution
+### To run the tests, follow the commands below. 
+First create and activate the virtual environment. 
+To run the tests use the pytest command.  
+```
+cd /tests
+python -m venv myenv
+source myenv/bin/activate
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+pytest tests -s -v or pytest --headless tests -s -v --cache-clear
+```
 
 ### Accessing the reports and screenshots
 * The screenshot of an error is in the 'screenshot' directory.
