@@ -1,0 +1,37 @@
+{
+   "main_page_links": [
+    "https://bbp.epfl.ch/mmb-beta",
+    "https://bbp.epfl.ch/mmb-beta/explore",
+    "https://bbp.epfl.ch/mmb-beta/build/load-brain-config",
+    "https://bbp.epfl.ch/mmb-beta/simulate"
+  ],
+  "explore_page_links":[
+    "https://bbp.epfl.ch/mmb-beta/explore",
+    "https://bbp.epfl.ch/mmb-beta/explore/brain-models",
+    "https://bbp.epfl.ch/mmb-beta/explore/simulation-campaigns",
+    "https://bbp.epfl.ch/mmb-beta/explore/electrophysiology",
+    "https://bbp.epfl.ch/mmb-beta/explore/morphology",
+    "https://bbp.epfl.ch/mmb-beta/explore/bouton-density",
+    "https://bbp.epfl.ch/mmb-beta/explore/neuron-density",
+    "https://bbp.epfl.ch/mmb-beta/explore/layer-thickness",
+    "https://bbp.epfl.ch/mmb-beta/explore/synapse-per-connection"
+
+  ],
+  "explore_ephys_links":[
+      "https://bbp.epfl.ch/mmb-beta/explore/electrophysiology",
+      "https://bbp.epfl.ch/mmb-beta"
+
+  ],
+  "build_page_links":[
+      "https://bbp.epfl.ch/mmb-beta/build/load-brain-config",
+      "https://bbp.epfl.ch/mmb-beta"
+
+  ],
+  "simulate_page_links": [
+    "https://bbp.epfl.ch/mmb-beta/simulate/sim-campaign-selector"
+  ],
+
+  "brain_build_page_links": [
+    "https://bbp.epfl.ch/mmb-beta/build/cell-composition/interactive?brainModelConfigId="
+  ]
+}
