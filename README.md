@@ -13,10 +13,7 @@
 * Install virtual environment.
 * A json file with login credentials would need to be created to log into SBO. 
 
-### To :
-```bash
-source venv/bin/activate
-```
+
 ## Test execution
 ### To run the tests, follow the commands below. 
 First create and activate the virtual environment. 
