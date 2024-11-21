@@ -143,19 +143,17 @@ def navigate_to_login(setup):
 
 @pytest.fixture(scope="function")
 def login(setup, navigate_to_login):
-    """Fixture that navigates to the login page"""
+    """Fixture to log in and ensure user is authenticated."""
     browser, wait = setup
     login_page = navigate_to_login
     config = load_config()
     username = config['username']
     password = config['password']
 
-    if 'mmb-beta' not in browser.current_url:
-        login_page.find_username_field().send_keys(username)
-        login_page.find_password_field().send_keys(password)
-        login_page.find_signin_button().click()
-        wait.until(EC.url_contains("mmb-beta"))
-
+    login_page.perform_login(username, password)
+    login_page.wait_for_login_complete()
+    assert "/app/explore" in browser.current_url, f"Login failed, current URL: {browser.current_url}"
+    print("Login successful. Current URL:", browser.current_url)
     yield browser, wait
     login_page.browser.delete_all_cookies()
 
