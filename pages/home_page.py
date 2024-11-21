@@ -9,7 +9,7 @@ from locators.home_page_locators import HomePageLocators
 from selenium.webdriver.support import expected_conditions as EC
 from pages.base_page import CustomBasePage
 from util.util_links_checker import LinkChecker
-from util.util_methods import click_element, find_element, assert_element_text
+from .base_page import CustomBasePage
 from util.util_scraper import UrlScraper
 
 

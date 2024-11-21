@@ -1,8 +1,11 @@
-import json
+# Copyright (c) 2024 Blue Brain Project/EPFL
+#
+# SPDX-License-Identifier: Apache-2.0
+
+
 import logging
 import os
 import sys
-import time
 from io import BytesIO
 
 import pytest
