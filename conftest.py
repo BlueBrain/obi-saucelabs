@@ -24,9 +24,7 @@ from util.util_base import load_config
 
 urllib3.disable_warnings()
 
-# # Set up Sauce Labs credentials
-# SAUCE_USERNAME = "your_sauce_username"
-# SAUCE_ACCESS_KEY = "your_sauce_access_key"
+
 
 
 @pytest.fixture(autouse=True)
@@ -83,45 +81,6 @@ def browser(request):
 
         browser.quit()
 
-
-
-
-# if browser_name == "chrome":
-#     if headless_mode:
-#         options.add_argument("--headless=new")
-#     options.add_argument("--no-sandbox")
-#     options.add_argument("--disable-gpu")
-#     service = ChromeService(ChromeDriverManager().install())
-#     browser = webdriver.Chrome(service=service, options=options)
-# elif browser_name == "firefox":
-#     options = FirefoxOptions()
-#     if headless_mode:
-#         options.add_argument("--headless")
-#     service = FirefoxService(executable_path=GeckoDriverManager().install())
-#     browser = webdriver.Firefox(service=service, options=options)
-# elif browser_name == "headless":
-#     options.add_argument("--headless")
-#     options.add_argument("--no-sandbox")
-#     options.add_argument("--disable-gpu")
-#     service = ChromeService(ChromeDriverManager().install())
-#     browser = webdriver.Chrome(service=service, options=options)
-#
-# else:
-#     raise ValueError("Invalid BROWSER_NAME: {}".format(browser_name))
-#
-# wait = WebDriverWait(browser, 10)
-#
-# if browser is not None:
-#     browser.set_window_position(-1000, 0)
-#     browser.maximize_window()
-# browser.delete_all_cookies()
-#
-# request.cls.browser = browser
-# request.cls.wait = wait
-# yield browser, wait
-#
-# if browser is not None:
-#     browser.quit()
 
 
 @pytest.fixture(scope="function")
