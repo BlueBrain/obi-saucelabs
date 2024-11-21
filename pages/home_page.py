@@ -15,20 +15,11 @@ class HomePage(CustomBasePage, LinkChecker):
         self.url_scraper = UrlScraper()
 
     def go_to_home_page(self):
-        self.browser.get(self.url)
+        self.go_to_page("")
 
     def scrape_links(self):
         page_source = self.browser.page_source
         links = self.url_scraper.scrape_links(page_source)
-
-    def find_explore_title(self):
-        return find_element(self.wait, HomePageLocators.EXPLORE_TITLE)
-
-    def find_build_title(self):
-        return find_element(self.wait, HomePageLocators.BUILD_TITLE)
-
-    def find_simulate_title(self):
-        return find_element(self.wait, HomePageLocators.SIMULATE_TITLE)
 
     def find_login_button(self):
         return find_element(self.wait, HomePageLocators.LOGIN_BUTTON)

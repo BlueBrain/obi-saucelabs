@@ -9,22 +9,15 @@ import pytest
 import urllib3
 from PIL import Image
 from selenium import webdriver
-from selenium.common import exceptions, NoSuchElementException
+from selenium.common import exceptions
 from selenium.webdriver.chrome.options import Options as ChromeOptions
-from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium.webdriver.firefox.options import Options as FirefoxOptions
-from selenium.webdriver.firefox.service import Service as FirefoxService
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from webdriver_manager.chrome import ChromeDriverManager
-from webdriver_manager.firefox import GeckoDriverManager
-from pages.home_page import HomePage
+
 from pages.login_page import LoginPage
 from util.util_base import load_config
 
 urllib3.disable_warnings()
-
-
 
 
 @pytest.fixture(autouse=True)
@@ -49,14 +42,15 @@ def setup(request, pytestconfig):
     sauce_url = "https://ondemand.eu-central-1.saucelabs.com/wd/hub"
 
     driver = webdriver.Remote(command_executor=sauce_url, options=options)
-
-    yield driver
+    wait = WebDriverWait(driver, 10)
+    yield driver, wait
 
     if driver is not None:
         sauce_result = "failed" if request.session.testsfailed == 1 else "passed"
         driver.execute_script("sauce:job-result={}".format(sauce_result))
 
         driver.quit()
+
 
 @pytest.fixture()
 def browser(request):
@@ -80,7 +74,6 @@ def browser(request):
         browser.execute_script("sauce:job-result={}".format(sauce_result))
 
         browser.quit()
-
 
 
 @pytest.fixture(scope="function")
@@ -125,7 +118,7 @@ def logger(request):
 
 
 @pytest.fixture(scope="function")
-def navigate_to_login(setup):
+def navigate_to_login(setup, browser):
     """Fixture that navigates to the login page"""
     browser, wait = setup
     login_page = LoginPage(browser, wait)
@@ -142,7 +135,7 @@ def navigate_to_login(setup):
 
 
 @pytest.fixture(scope="function")
-def login(setup, navigate_to_login):
+def login(setup, navigate_to_login, browser):
     """Fixture to log in and ensure user is authenticated."""
     browser, wait = setup
     login_page = navigate_to_login
