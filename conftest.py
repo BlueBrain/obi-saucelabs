@@ -126,10 +126,13 @@ def logger(request):
 
 @pytest.fixture(scope="function")
 def navigate_to_login(setup):
-    browser = setup
-    wait = WebDriverWait(browser, 10)
-    login_page = LoginPage(browser,wait)
-    login_page.navigate_to_homepage()
+    """Fixture that navigates to the login page"""
+    browser, wait = setup
+    login_page = LoginPage(browser, wait)
+
+    target_URL = login_page.navigate_to_homepage()
+    browser.execute_script("window.stop();")
+    print(f"Contest fixture - Navigated to: {target_URL}")
 
     login_button = login_page.find_login_button()
     assert login_button.is_displayed()
