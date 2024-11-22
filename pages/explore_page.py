@@ -1,3 +1,7 @@
+# Copyright (c) 2024 Blue Brain Project/EPFL
+#
+# SPDX-License-Identifier: Apache-2.0
+
 from locators.explore_page_locators import ExplorePageLocators
 from selenium.webdriver.support import expected_conditions as EC
 from pages.home_page import HomePage
@@ -9,67 +13,81 @@ class ExplorePage(HomePage, LinkChecker):
     def __init__(self, browser, wait):
         super().__init__(browser, wait)
         self.home_page = HomePage(browser, wait)
-        self.url_scraper = UrlScraper()
+        # self.url_scraper = UrlScraper()
 
     def go_to_explore_page(self):
-        self.browser.get(self.url + "/explore")
+        # self.browser.get(self.base_url)
+        self.browser.get(self.base_url + "/explore/interactive")
+        print("PAGES/EXPLORE_PAGE.PY current url", self.browser.current_url)
         return self.browser.current_url
 
-    def scrape_links(self):
-        page_source = self.browser.page_source
-        links = self.url_scraper.scrape_links(page_source)
+    # def scrape_links(self):
+    #     page_source = self.browser.page_source
+    #     links = self.url_scraper.scrape_links(page_source)
 
     def wait_for_dynamically_loaded_links(self):
         self.wait.until(EC.presence_of_element_located(ExplorePageLocators.EXPLORE_LINK1))
 
     def check_explore_title_is_present(self):
-        return self.wait.until(EC.element_to_be_clickable(ExplorePageLocators.EXPLORE_TITLE))
+        return self.element_to_be_clickable(ExplorePageLocators.EXPLORE_TITLE)
 
-    def experimental_data_title(self):
-        return self.wait.until(EC.presence_of_element_located(ExplorePageLocators.EXPERIMENTAL_DATA))
-
-    def brain_models_title(self):
-        return self.wait.until(EC.presence_of_element_located(ExplorePageLocators.BRAIN_MODELS))
-
-    def brain_models_links(self):
-        return self.wait.until(EC.presence_of_element_located(ExplorePageLocators.BRAIN_MODELS_LINK))
-
-    def simulations_link(self):
-        return self.wait.until(EC.presence_of_element_located(ExplorePageLocators.SIMULATIONS_LINK))
-
-    def simulations_title(self):
-        return self.wait.until(EC.presence_of_element_located(ExplorePageLocators.SIMULATIONS))
-
-    def brain_and_cell_title(self):
-        return self.wait.until(EC.presence_of_element_located(ExplorePageLocators.BRAIN_CELL_ANNOTATIONS))
-
-    def portals_title(self):
-        return self.wait.until(EC.presence_of_element_located(ExplorePageLocators.PORTALS))
-
-    def gallery_title(self):
-        return self.wait.until(EC.presence_of_element_located(ExplorePageLocators.GALLERY))
+    def find_model_data_title(self):
+        return self.find_element(ExplorePageLocators.MODEL_DATA_BTN)
 
     def literature_title(self):
-        return self.wait.until(EC.presence_of_element_located(ExplorePageLocators.LITERATURE))
+        return self.find_element(ExplorePageLocators.LITERATURE)
 
-    def experimental_data_button(self, timeout=10):
-        return self.wait.until(EC.visibility_of_element_located(ExplorePageLocators.EXPERIMENTAL_DATA_BUTTON))
+    def literature_link(self):
+        return self.find_element(ExplorePageLocators.LITERATURE_LINK)
 
-    def neuron_electrophysiology_link(self):
-        return self.wait.until(EC.presence_of_element_located(ExplorePageLocators.NEURON_ELECTROPHYSIOLOGY))
+    def find_explore_page_titles(self, page_locators):
+        elements_list = []
+        for locator in page_locators:
+            elements_list.extend(self.find_all_elements(locator))
+        return elements_list
 
-    def neuron_morphology_link(self):
-        return self.wait.until(EC.visibility_of_element_located(ExplorePageLocators.NEURON_MORPHOLOGY))
+    def find_experimental_data_titles(self, exp_data_title):
+        exp_data_title = []
+        for title in exp_data_title:
+            exp_data_title.extend(self.find_all_elements(title))
+        return exp_data_title
 
-    def bouton_density_link(self):
-        return self.wait.until(EC.visibility_of_element_located(ExplorePageLocators.BOUTON_DENSITY))
+    def get_experiment_record_count(self, record_count_locators):
+        record_counts = []
+        for locator in record_count_locators:
+            record = self.find_element(locator)
+            record_text = record.text.strip()
+            try:
+                record_number = int(''.join(filter(str.isdigit, record_text)))
+            except ValueError:
+                raise ValueError(f"Unable to parse record count from text: {record_text}")
+            record_counts.append(record_number)
+        return record_counts
 
-    def neuron_density_link(self):
-        return self.wait.until(EC.visibility_of_element_located(ExplorePageLocators.NEURON_DENSITY))
+    def find_brain_region_panel(self):
+        return self.find_element(ExplorePageLocators.BRAIN_REGION_PANEL)
 
-    def layer_thickness_link(self):
-        return self.wait.until(EC.visibility_of_element_located(ExplorePageLocators.LAYER_THICKNESS))
+    def find_cerebrum_brp(self):
+        return self.find_element(ExplorePageLocators.BRP_CEREBRUM)
 
-    def synapse_per_connection_link(self):
-        return self.wait.until(EC.visibility_of_element_located(ExplorePageLocators.SYNAPSE_PER_CONNECTION))
+    def find_cerebral_cortex_brp(self):
+        return self.find_element(ExplorePageLocators.CEREBRAL_CORTEX_TITLE)
+
+    def find_cerebrum_arrow_btn(self):
+        return self.find_element(ExplorePageLocators.CEREBRUM_BTN)
+
+    def find_3d_atlas(self):
+        return self.find_element(ExplorePageLocators.ATLAS)
+
+    def find_atlas_fullscreen_bt(self):
+        return self.find_element(ExplorePageLocators.ATLAS_FULLSCREEN)
+
+    def find_fullscreen_exit(self):
+        return self.find_element(ExplorePageLocators.FULLSCREEN_EXIT)
+
+    def find_neurons_panel(self):
+        return self.find_element(ExplorePageLocators.NEURONS_PANEL)
+
+    def find_count_switch(self):
+        return self.find_element(ExplorePageLocators.COUNT_SWITCH)
 
