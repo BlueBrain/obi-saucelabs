@@ -1,32 +1,26 @@
-import json
+# Copyright (c) 2024 Blue Brain Project/EPFL
+#
+# SPDX-License-Identifier: Apache-2.0
+
+
 import logging
 import os
 import sys
-import time
 from io import BytesIO
 
 import pytest
 import urllib3
 from PIL import Image
 from selenium import webdriver
-from selenium.common import exceptions, NoSuchElementException
+from selenium.common import exceptions
 from selenium.webdriver.chrome.options import Options as ChromeOptions
-from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium.webdriver.firefox.options import Options as FirefoxOptions
-from selenium.webdriver.firefox.service import Service as FirefoxService
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-from webdriver_manager.chrome import ChromeDriverManager
-from webdriver_manager.firefox import GeckoDriverManager
-from pages.home_page import HomePage
+
 from pages.login_page import LoginPage
 from util.util_base import load_config
 
 urllib3.disable_warnings()
-
-# # Set up Sauce Labs credentials
-# SAUCE_USERNAME = "your_sauce_username"
-# SAUCE_ACCESS_KEY = "your_sauce_access_key"
 
 
 @pytest.fixture(autouse=True)
@@ -51,14 +45,15 @@ def setup(request, pytestconfig):
     sauce_url = "https://ondemand.eu-central-1.saucelabs.com/wd/hub"
 
     driver = webdriver.Remote(command_executor=sauce_url, options=options)
-
-    yield driver
+    wait = WebDriverWait(driver, 10)
+    yield driver, wait
 
     if driver is not None:
         sauce_result = "failed" if request.session.testsfailed == 1 else "passed"
         driver.execute_script("sauce:job-result={}".format(sauce_result))
 
         driver.quit()
+
 
 @pytest.fixture()
 def browser(request):
@@ -82,46 +77,6 @@ def browser(request):
         browser.execute_script("sauce:job-result={}".format(sauce_result))
 
         browser.quit()
-
-
-
-
-# if browser_name == "chrome":
-#     if headless_mode:
-#         options.add_argument("--headless=new")
-#     options.add_argument("--no-sandbox")
-#     options.add_argument("--disable-gpu")
-#     service = ChromeService(ChromeDriverManager().install())
-#     browser = webdriver.Chrome(service=service, options=options)
-# elif browser_name == "firefox":
-#     options = FirefoxOptions()
-#     if headless_mode:
-#         options.add_argument("--headless")
-#     service = FirefoxService(executable_path=GeckoDriverManager().install())
-#     browser = webdriver.Firefox(service=service, options=options)
-# elif browser_name == "headless":
-#     options.add_argument("--headless")
-#     options.add_argument("--no-sandbox")
-#     options.add_argument("--disable-gpu")
-#     service = ChromeService(ChromeDriverManager().install())
-#     browser = webdriver.Chrome(service=service, options=options)
-#
-# else:
-#     raise ValueError("Invalid BROWSER_NAME: {}".format(browser_name))
-#
-# wait = WebDriverWait(browser, 10)
-#
-# if browser is not None:
-#     browser.set_window_position(-1000, 0)
-#     browser.maximize_window()
-# browser.delete_all_cookies()
-#
-# request.cls.browser = browser
-# request.cls.wait = wait
-# yield browser, wait
-#
-# if browser is not None:
-#     browser.quit()
 
 
 @pytest.fixture(scope="function")
@@ -166,11 +121,14 @@ def logger(request):
 
 
 @pytest.fixture(scope="function")
-def navigate_to_login(setup):
-    browser = setup
-    wait = WebDriverWait(browser, 10)
-    login_page = LoginPage(browser,wait)
-    login_page.navigate_to_homepage()
+def navigate_to_login(setup, browser):
+    """Fixture that navigates to the login page"""
+    browser, wait = setup
+    login_page = LoginPage(browser, wait)
+
+    target_URL = login_page.navigate_to_homepage()
+    browser.execute_script("window.stop();")
+    print(f"Contest fixture - Navigated to: {target_URL}")
 
     login_button = login_page.find_login_button()
     assert login_button.is_displayed()
@@ -180,20 +138,18 @@ def navigate_to_login(setup):
 
 
 @pytest.fixture(scope="function")
-def login(setup, navigate_to_login):
-    """Fixture that navigates to the login page"""
+def login(setup, navigate_to_login, browser):
+    """Fixture to log in and ensure user is authenticated."""
     browser, wait = setup
     login_page = navigate_to_login
     config = load_config()
     username = config['username']
     password = config['password']
 
-    if 'mmb-beta' not in browser.current_url:
-        login_page.find_username_field().send_keys(username)
-        login_page.find_password_field().send_keys(password)
-        login_page.find_signin_button().click()
-        wait.until(EC.url_contains("mmb-beta"))
-
+    login_page.perform_login(username, password)
+    login_page.wait_for_login_complete()
+    assert "/app/explore" in browser.current_url, f"Login failed, current URL: {browser.current_url}"
+    print("Login successful. Current URL:", browser.current_url)
     yield browser, wait
     login_page.browser.delete_all_cookies()
 

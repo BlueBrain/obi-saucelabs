@@ -1,4 +1,8 @@
 import time
+
+from selenium.common import TimeoutException
+from selenium.webdriver import Keys
+
 from locators.login_locators import LoginPageLocators
 from selenium.webdriver.support import expected_conditions as EC
 from pages.base_page import CustomBasePage
@@ -9,27 +13,49 @@ class LoginPage(CustomBasePage):
         super().__init__(browser, wait)
 
     def navigate_to_homepage(self):
-        self.browser.get("https://bbp.epfl.ch/mmb-beta")
+        self.browser.delete_all_cookies()
+        target_url = "https://openbluebrain.com/app"
+        # target_url = "https://staging.openbluebrain.com/"
+        self.browser.get(target_url)
+        print("Starting URL from PAGES/LOGIN_PAGE.PY:", self.browser.current_url)
+        return self.browser.current_url
 
     def find_login_button(self):
         return self.wait.until(EC.element_to_be_clickable(LoginPageLocators.LOGIN_BUTTON))
 
-    def login(self):
-        self.wait.until(EC.presence_of_element_located(LoginPageLocators.USERNAME))
-        self.wait.until(EC.presence_of_element_located(LoginPageLocators.PASSWORD))
-
-    def wait_for_login_complete(self):
-        """Wait for login to complete by checking URL change"""
-        self.wait.until(EC.url_contains("mmb-beta"))
+    def wait_for_login_complete(self, timeout=30):
+        """Wait for login completion by checking a URL or element."""
+        try:
+            self.wait.until(EC.url_contains('explore/interactive'), timeout)
+        except TimeoutException:
+            print(
+                f"Timeout waiting for URL to contain 'virtual-lab'. Current URL: "
+                f"{self.browser.current_url}")
+            raise
 
     def find_username_field(self):
-        return self.wait.until(EC.presence_of_element_located(LoginPageLocators.USERNAME))
+        return self.wait.until(EC.presence_of_element_located(LoginPageLocators.USERNAME_FIELD))
 
     def find_password_field(self):
-        return self.wait.until(EC.presence_of_element_located(LoginPageLocators.PASSWORD))
+        return self.wait.until(EC.presence_of_element_located(LoginPageLocators.PASSWORD_FIELD))
 
     def find_signin_button(self):
         return self.wait.until(EC.element_to_be_clickable(LoginPageLocators.SIGN_IN))
 
     def find_logout_button(self):
         return self.wait.until(EC.element_to_be_clickable(LoginPageLocators.LOGOUT))
+
+    def find_submit(self):
+        return self.wait.until(EC.element_to_be_clickable(LoginPageLocators.SUBMIT))
+
+    def perform_login(self, username, password):
+        username_field = self.find_username_field()
+        password_field = self.find_password_field()
+
+        username_field.send_keys(username)
+        password_field.send_keys(password)
+        password_field.send_keys(Keys.ENTER)
+        print("Submitted login credentials")
+
+        self.wait_for_login_complete()
+        self.wait.until(EC.url_contains("/app/explore"))
