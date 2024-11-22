@@ -3,41 +3,74 @@
 
 ## Features
 - The tests use setup/teardown methods for the session. 
-- Test with Chrome and Firefox (also in headless).
-- Possibility to visually see the execution.
+- Test with Chrome, Firefox and other browsers available in Sauce Labs (also in headless).
+- Possibility to view the execution of the test run.
 - Possibility to see the screenshots of the errors.
-- A html report generated at each test run.
+- Live test report in the Sauce Labs platform.
 
-## Prerequisites
-* Make sure pip is installed in your system (please see the instructions below).
-* Install virtual environment.
-* A json file with login credentials would need to be created to log into SBO. 
+## Install
+
+### Prerequisites:
+- Python 3.x installed
+- pip package manager installed
+- Make sure pip is installed in your system (please see the instructions below).
+- Install virtual environment.
+- A json file with login credentials would need to be created.  
+
+**Linux/Unix:**
+- Run `sudo apt update && sudo apt install python3-pip`
+
+### Setting Up Virtual Environment:
+It's recommended to use a virtual environment to manage dependencies. Follow these steps:
+
+**Windows/Linux/Unix:**
+1. Install virtualenv if not already installed: 
+    ```
+    pip install virtualenv
+    ```
+   or use Python's built-in venv module:
+    ```
+    python -m venv myenv
+2. Create a virtual environment:
+    ```
+    virtualenv myenv
+    ```
+3. Activate the virtual environment:
+    - **Windows:**
+        ```
+        myenv\Scripts\activate
+        ```
+    - **Linux/Unix:**
+        ```
+        source myenv/bin/activate
+        ```
+4. Upgrade pip:
+    ```
+    python -m pip install --upgrade pip
+    ```
+5. Install dependencies
+    ```
+    pip install -r requirements.txt
+    ```
+   
+Make sure to replace `myenv` with your preferred name for the virtual environment.
+
+### JSON File for Login Credentials:
+Create a JSON file with login credentials to authorize test execution.
 
 
-## Test execution
-### To run the tests, follow the commands below. 
-First create and activate the virtual environment. 
-To run the tests use the pytest command.  
-```
-cd /tests
-python -m venv myenv
-source myenv/bin/activate
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-pytest tests -s -v or pytest --headless tests -s -v --cache-clear
-```
+### Running Tests:
+
+To run the tests using pytest. Navigate to the directory containing your test files and run:
+   ```
+   pytest tests -sv or pytest --headless tests -s -v --cache-clear
+   ```
 
 ### Accessing the reports and screenshots
-* The screenshot of an error is in the 'screenshot' directory.
-* The html reports are in the tests/.
-* The report.log is in allure_reports/.
+The test report is available and can be viewed immediately after the test run in Sauce Labs
 
-
-
-# Simulating GitLab locally
 
 ## Building a container
-
 You'll need a working [podman installation](https://podman.io/docs/installation) (or docker, if you insist).
 
 The `Dockerfile` in the root of this repository will give you a very similar container to the one GitLab will use when running the tests: based on `python:3.10` and with some basic software pre-installed.
@@ -89,3 +122,23 @@ Unless you make changes to the `Dockerfile`, there's no need to rebuild the cont
 `podman rmi <image_id>` to remove an image
 
 If you do make changes to the `Dockerfile` and want to rebuild your container, either remove the existing image or increase the version number.
+
+
+## Spelling/Links
+
+This README file has been checked for spelling errors and links have been verified.
+
+## Legal Requirements
+
+### Copyright, Funding & Authors
+
+The development of this software was supported by funding to the Blue Brain Project,
+a research center of the École polytechnique fédérale de Lausanne (EPFL), from 
+the Swiss government's ETH Board of the Swiss Federal Institutes of Technology.
+
+- **Copyright**: Copyright (c) 2024 Blue Brain Project/EPFL
+
+### Apache-2.0 license
+## Apache License, Version 2.0
+
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
