@@ -1,0 +1,7 @@
+stages:
+  - test
+
+dummy-job:
+  stage: test
+  script:
+    - echo "This is a dummy job"
