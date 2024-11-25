@@ -218,7 +218,12 @@ def pytest_addoption(parser):
         choices=["firefox"],
         help="Specify the browser to run the tests in",
     )
-
+    parser.addoption(
+        "--headless",
+        action="store_true",
+        default=False,
+        help="Run tests in headless mode"
+    )
     parser.addoption("--log-file-path", action="store", default=None,
                      help="Specify the log file path")
 
