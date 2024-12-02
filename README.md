@@ -128,17 +128,9 @@ If you do make changes to the `Dockerfile` and want to rebuild your container, e
 
 This README file has been checked for spelling errors and links have been verified.
 
-## Legal Requirements
+## Acknowledgment
 
-### Copyright, Funding & Authors
+The development of this software was supported by funding to the Blue Brain Project, a research center of the École polytechnique fédérale de Lausanne (EPFL), from the Swiss government's ETH Board of the Swiss Federal Institutes of Technology.
 
-The development of this software was supported by funding to the Blue Brain Project,
-a research center of the École polytechnique fédérale de Lausanne (EPFL), from 
-the Swiss government's ETH Board of the Swiss Federal Institutes of Technology.
+Copyright (c) 2024 Blue Brain Project/EPFL
 
-- **Copyright**: Copyright (c) 2024 Blue Brain Project/EPFL
-
-### Apache-2.0 license
-## Apache License, Version 2.0
-
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
